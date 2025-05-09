@@ -1,1 +1,365 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <limits>
 
+class Person {
+private:
+    std::string name;
+    int age;
+    int id;
+    std::string contactInfo;
+
+public:
+    Person(std::string name, int age, int id, std::string contactInfo) : name(name), age(age), id(id), contactInfo(contactInfo) {}
+    virtual ~Person() {}
+
+    std::string getName() const { return name; }
+    int getAge() const { return age; }
+    int getId() const { return id; }
+    std::string getContactInfo() const { return contactInfo; }
+
+    void setName(std::string newName) {
+        if (!newName.empty()) {
+            name = newName;
+        } else {
+            std::cerr << "Error: Name cannot be empty." << std::endl;
+        }
+    }
+
+    void setAge(int newAge) {
+        if (newAge > 0 && newAge < 150) {
+            age = newAge;
+        } else {
+            std::cerr << "Error: Age must be positive and reasonable." << std::endl;
+        }
+    }
+
+    void setId(int newId) { id = newId; }
+    void setContactInfo(std::string newContactInfo) { contactInfo = newContactInfo; }
+
+    virtual void displayPersonInfo() const {
+        std::cout << "Name: " << name << ", Age: " << age << ", ID: " << id << ", Contact: " << contactInfo << std::endl;
+    }
+
+    virtual void displayDetails() const {
+        displayPersonInfo();
+    }
+
+    virtual double calculatePayment() const {
+        std::cout << "Calculating base payment for Person." << std::endl;
+        return 0.0;
+    }
+};
+
+class Student : public Person {
+private:
+    std::string enrollmentDate;
+    std::string program;
+    double gpa;
+
+public:
+    Student(std::string name, int age, int id, std::string contactInfo, std::string enrollmentDate, std::string program, double gpa)
+        : Person(name, age, id, contactInfo), enrollmentDate(enrollmentDate), program(program), gpa(gpa) {}
+    ~Student() {}
+
+    std::string getEnrollmentDate() const { return enrollmentDate; }
+    std::string getProgram() const { return program; }
+    double getGPA() const { return gpa; }
+
+    void setEnrollmentDate(std::string newEnrollmentDate) { enrollmentDate = newEnrollmentDate; }
+    void setProgram(std::string newProgram) { program = newProgram; }
+
+    void setGPA(double newGPA) {
+        if (newGPA >= 0.0 && newGPA <= 4.0) {
+            gpa = newGPA;
+        } else {
+            std::cerr << "Error: GPA must be between 0.0 and 4.0." << std::endl;
+        }
+    }
+
+    void displayPersonInfo() const override {
+        Person::displayPersonInfo();
+        std::cout << "Enrollment Date: " << enrollmentDate << ", Program: " << program << ", GPA: " << gpa << std::endl;
+    }
+
+    void displayDetails() const override {
+        displayPersonInfo();
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating tuition fee for Student." << std::endl;
+        if (program == "Computer Science") return 10000.0;
+        else if (program == "Engineering") return 12000.0;
+        else return 9000.0;
+    }
+};
+
+class Professor : public Person {
+private:
+    std::string department;
+    std::string specialization;
+    std::string hireDate;
+    double salary;
+
+public:
+    Professor(std::string name, int age, int id, std::string contactInfo, std::string department, std::string specialization, std::string hireDate, double salary)
+        : Person(name, age, id, contactInfo), department(department), specialization(specialization), hireDate(hireDate), salary(salary) {}
+    ~Professor() {}
+
+    std::string getDepartment() const { return department; }
+    std::string getSpecialization() const { return specialization; }
+    std::string getHireDate() const { return hireDate; }
+    double getSalary() const { return salary; }
+
+    void setDepartment(std::string newDepartment) { department = newDepartment; }
+    void setSpecialization(std::string newSpecialization) { specialization = newSpecialization; }
+    void setHireDate(std::string newHireDate) { hireDate = newHireDate; }
+    void setSalary(double newSalary) {
+        if (newSalary >= 0) salary = newSalary;
+        else std::cerr << "Error: Salary cannot be negative." << std::endl;
+    }
+
+    void displayPersonInfo() const override {
+        Person::displayPersonInfo();
+        std::cout << "Department: " << department << ", Specialization: " << specialization << ", Hire Date: " << hireDate << std::endl;
+    }
+
+    void displayDetails() const override {
+        displayPersonInfo();
+        std::cout << "Salary: $" << salary << std::endl;
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating monthly salary for Professor." << std::endl;
+        return salary / 12.0;
+    }
+};
+
+class Course {
+private:
+    std::string code;
+    std::string title;
+    int credits;
+    std::string description;
+
+public:
+    Course(std::string code, std::string title, int credits, std::string description)
+        : code(code), title(title), credits(credits), description(description) {}
+    ~Course() {}
+
+    std::string getCode() const { return code; }
+    std::string getTitle() const { return title; }
+    int getCredits() const { return credits; }
+    std::string getDescription() const { return description; }
+
+    void setCode(std::string newCode) { code = newCode; }
+    void setTitle(std::string newTitle) { title = newTitle; }
+    void setCredits(int newCredits) {
+        if (newCredits > 0) credits = newCredits;
+        else std::cerr << "Error: Credits must be positive." << std::endl;
+    }
+    void setDescription(std::string newDescription) { description = newDescription; }
+
+    void displayCourseInfo() const {
+        std::cout << "Code: " << code << ", Title: " << title << ", Credits: " << credits << ", Description: " << description << std::endl;
+    }
+};
+
+class Department {
+private:
+    std::string name;
+    std::string location;
+    double budget;
+
+public:
+    Department(std::string name, std::string location, double budget)
+        : name(name), location(location), budget(budget) {}
+    ~Department() {}
+
+    std::string getName() const { return name; }
+    std::string getLocation() const { return location; }
+    double getBudget() const { return budget; }
+
+    void setName(std::string newName) {
+        if (!newName.empty()) name = newName;
+        else std::cerr << "Error: Department name cannot be empty." << std::endl;
+    }
+    void setLocation(std::string newLocation) { location = newLocation; }
+    void setBudget(double newBudget) { budget = newBudget; }
+
+    void displayDepartmentInfo() const {
+        std::cout << "Name: " << name << ", Location: " << location << ", Budget: $" << budget << std::endl;
+    }
+};
+
+class GradeBook {
+private:
+    std::string courseCode;
+    std::vector<std::pair<int, double>> studentGrades;
+
+public:
+    GradeBook(std::string courseCode) : courseCode(courseCode) {}
+
+    void addGrade(int studentId, double grade) {
+        if (grade >= 0.0) {
+            studentGrades.push_back({studentId, grade});
+            std::cout << "Grade added for student " << studentId << " in " << courseCode << ": " << grade << std::endl;
+        } else {
+            std::cerr << "Error: Grade cannot be negative." << std::endl;
+        }
+    }
+
+    double calculateAverageGrade() const {
+        if (studentGrades.empty()) return 0.0;
+        double sum = 0;
+        for (const auto& pair : studentGrades) sum += pair.second;
+        return sum / studentGrades.size();
+    }
+
+    double getHighestGrade() const {
+        if (studentGrades.empty()) return 0.0;
+        double highest = -1.0;
+        for (const auto& pair : studentGrades)
+            if (pair.second > highest) highest = pair.second;
+        return highest;
+    }
+
+    std::vector<int> getFailingStudents(double passingGrade = 60.0) const {
+        std::vector<int> failingStudents;
+        for (const auto& pair : studentGrades)
+            if (pair.second < passingGrade) failingStudents.push_back(pair.first);
+        return failingStudents;
+    }
+};
+
+class EnrollmentManager {
+private:
+    std::vector<std::pair<int, std::string>> studentCourses;
+
+public:
+    EnrollmentManager() {}
+
+    void enrollStudent(int studentId, std::string courseCode) {
+        studentCourses.push_back({studentId, courseCode});
+        std::cout << "Student " << studentId << " enrolled in " << courseCode << std::endl;
+    }
+
+    void dropStudent(int studentId, std::string courseCode) {
+        for (auto it = studentCourses.begin(); it != studentCourses.end(); ++it) {
+            if (it->first == studentId && it->second == courseCode) {
+                studentCourses.erase(it);
+                std::cout << "Student " << studentId << " dropped from " << courseCode << std::endl;
+                return;
+            }
+        }
+        std::cout << "Enrollment record not found for student " << studentId << " in " << courseCode << std::endl;
+    }
+
+    int getEnrollmentCount(std::string courseCode) const {
+        int count = 0;
+        for (const auto& pair : studentCourses)
+            if (pair.second == courseCode) count++;
+        return count;
+    }
+};
+
+void processPerson(const Person* person) {
+    std::cout << "\n--- Processing Person (via pointer) ---\n";
+    person->displayDetails();
+    std::cout << "Payment: $" << person->calculatePayment() << std::endl;
+}
+
+void processPersonRef(const Person& person) {
+    std::cout << "\n--- Processing Person (via reference) ---\n";
+    person.displayDetails();
+    std::cout << "Payment: $" << person.calculatePayment() << std::endl;
+}
+
+int main() {
+    Person person1("Alice", 30, 101, "alice@example.com");
+    Person person2("", -5, 102, "bob@example.com");
+
+    Student student1("Charlie", 20, 201, "charlie@example.com", "2024-09-01", "Computer Science", 3.8);
+    Student student2("Diana", 21, 202, "diana@example.com", "2023-08-15", "Engineering", 4.5);
+
+    Professor professor1("Eve", 45, 301, "eve@example.com", "Science", "Physics", "2010-05-20", 120000.0);
+    Professor professor2("", 50, 302, "frank@example.com", "Arts", "History", "2005-11-10", 90000.0);
+
+    Course course1("CS101", "Intro to Programming", 4, "Fundamentals of computer science.");
+    Course course2("MA201", "Calculus I", 3, "Basic principles of calculus.");
+    Department dept1("Computer Science", "Building A", 1000000.0);
+    Department dept2("Mathematics", "Building B", 800000.0);
+
+    std::cout << "\n--- Displaying Initial Information ---\n";
+    person1.displayPersonInfo();
+    person2.displayPersonInfo();
+    student1.displayPersonInfo();
+    student2.displayPersonInfo();
+    professor1.displayPersonInfo();
+    professor2.displayPersonInfo();
+
+    std::cout << "\n--- Testing Setters with Validation ---\n";
+    student1.setGPA(3.9);
+    student2.setGPA(5.0);
+    course1.setCredits(5);
+    course2.setCredits(-2);
+    person1.setAge(31);
+    person2.setAge(-10);
+    person1.setName("Alice Smith");
+    person2.setName("");
+    dept1.setName("School of Computing");
+    dept2.setName("");
+
+    std::cout << "\n--- Displaying Information After Setters ---\n";
+    person1.displayPersonInfo();
+    person2.displayPersonInfo();
+    student1.displayPersonInfo();
+    student2.displayPersonInfo();
+    course1.displayCourseInfo();
+    course2.displayCourseInfo();
+    dept1.displayDepartmentInfo();
+    dept2.displayDepartmentInfo();
+
+    std::cout << "\n--- Part B: Encapsulation and Complex Operations ---\n";
+
+    GradeBook gradeBookCS101("CS101");
+    gradeBookCS101.addGrade(201, 85.5);
+    gradeBookCS101.addGrade(202, 92.0);
+    gradeBookCS101.addGrade(203, -10.0);
+
+    std::cout << "Average grade for CS101: " << gradeBookCS101.calculateAverageGrade() << std::endl;
+    std::cout << "Highest grade in CS101: " << gradeBookCS101.getHighestGrade() << std::endl;
+    std::cout << "Failing students in CS101 (below 60): ";
+    std::vector<int> failing = gradeBookCS101.getFailingStudents();
+    for (int id : failing) std::cout << id << " ";
+    std::cout << std::endl;
+
+    EnrollmentManager enrollmentMgr;
+    enrollmentMgr.enrollStudent(201, "CS101");
+    enrollmentMgr.enrollStudent(202, "CS101");
+    enrollmentMgr.enrollStudent(201, "MA201");
+    std::cout << "Number of students in CS101: " << enrollmentMgr.getEnrollmentCount("CS101") << std::endl;
+    enrollmentMgr.dropStudent(202, "CS101");
+    std::cout << "Number of students in CS101 after drop: " << enrollmentMgr.getEnrollmentCount("CS101") << std::endl;
+    enrollmentMgr.dropStudent(205, "CS101");
+
+    std::cout << "\n--- Part C: Polymorphism ---\n";
+
+    processPerson(&student1);
+    processPerson(&professor1);
+    processPersonRef(student2);
+    processPersonRef(professor2);
+
+    Person* people[] = {&student1, &professor1, &student2, &professor2};
+    int numPeople = sizeof(people) / sizeof(people[0]);
+
+    std::cout << "\n--- Polymorphic Behavior with Array of Pointers ---\n";
+    for (int i = 0; i < numPeople; ++i) {
+        std::cout << "\nProcessing Person at index " << i << ":" << std::endl;
+        people[i]->displayDetails();
+        std::cout << "Payment: $" << people[i]->calculatePayment() << std::endl;
+    }
+
+    return 0;
+}
