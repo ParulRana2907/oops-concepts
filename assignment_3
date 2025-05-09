@@ -1,1 +1,368 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <limits>
+#include <algorithm>
 
+class Person {
+private:
+    std::string name;
+    int age;
+    int id;
+    std::string contactInfo;
+
+public:
+    Person(const std::string& name, int age, int id, const std::string& contactInfo) : name(name), age(age), id(id), contactInfo(contactInfo) {}
+    virtual ~Person() {}
+
+    std::string getName() const { return name; }
+    int getAge() const { return age; }
+    int getId() const { return id; }
+    std::string getContactInfo() const { return contactInfo; }
+
+    void setName(const std::string& newName) {
+        if (!newName.empty()) {
+            name = newName;
+        } else {
+            std::cerr << "Error: Name cannot be empty." << std::endl;
+        }
+    }
+
+    void setAge(int newAge) {
+        if (newAge > 0 && newAge < 150) {
+            age = newAge;
+        } else {
+            std::cerr << "Error: Age must be positive and reasonable." << std::endl;
+        }
+    }
+
+    void setId(int newId) { id = newId; }
+    void setContactInfo(const std::string& newContactInfo) { contactInfo = newContactInfo; }
+
+    virtual void displayPersonInfo() const {
+        std::cout << "Name: " << name << ", Age: " << age << ", ID: " << id << ", Contact: " << contactInfo << std::endl;
+    }
+
+    virtual void displayDetails() const {
+        displayPersonInfo();
+    }
+
+    virtual double calculatePayment() const {
+        std::cout << "Calculating base payment for Person." << std::endl;
+        return 0.0;
+    }
+};
+
+class Professor : public Person {
+private:
+    std::string department;
+    std::string specialization;
+    std::string hireDate;
+    double salary;
+
+public:
+    Professor(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& department, const std::string& specialization, const std::string& hireDate, double salary)
+        : Person(name, age, id, contactInfo), department(department), specialization(specialization), hireDate(hireDate), salary(salary) {}
+    virtual ~Professor() {}
+
+    std::string getDepartment() const { return department; }
+    std::string getSpecialization() const { return specialization; }
+    std::string getHireDate() const { return hireDate; }
+    double getSalary() const { return salary; }
+
+    void setDepartment(const std::string& newDepartment) { department = newDepartment; }
+    void setSpecialization(const std::string& newSpecialization) { specialization = newSpecialization; }
+    void setHireDate(const std::string& newHireDate) { hireDate = newHireDate; }
+    void setSalary(double newSalary) {
+        if (newSalary >= 0) salary = newSalary;
+        else std::cerr << "Error: Salary cannot be negative." << std::endl;
+    }
+
+    void displayPersonInfo() const override {
+        Person::displayPersonInfo();
+        std::cout << "Department: " << department << ", Specialization: " << specialization << ", Hire Date: " << hireDate << std::endl;
+    }
+
+    void displayDetails() const override {
+        displayPersonInfo();
+        std::cout << "Salary: $" << salary << std::endl;
+    }
+
+    virtual double calculatePayment() const override {
+        std::cout << "Calculating monthly salary for Professor." << std::endl;
+        return salary / 12.0;
+    }
+};
+
+class AssistantProfessor : public Professor {
+private:
+    std::string researchArea;
+    int numPublications;
+    double researchGrant;
+
+public:
+    AssistantProfessor(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& department, const std::string& specialization, const std::string& hireDate, double salary,
+                         const std::string& researchArea, int numPublications, double researchGrant)
+        : Professor(name, age, id, contactInfo, department, specialization, hireDate, salary),
+          researchArea(researchArea), numPublications(numPublications), researchGrant(researchGrant) {}
+    virtual ~AssistantProfessor() {}
+
+    std::string getResearchArea() const { return researchArea; }
+    int getNumPublications() const { return numPublications; }
+    double getResearchGrant() const { return researchGrant; }
+
+    void setResearchArea(const std::string& newResearchArea) { researchArea = newResearchArea; }
+    void setNumPublications(int newNumPublications) { numPublications = newNumPublications; }
+    void setResearchGrant(double newResearchGrant) { researchGrant = newResearchGrant; }
+
+    void displayDetails() const override {
+        Professor::displayDetails();
+        std::cout << "Research Area: " << researchArea << ", Publications: " << numPublications << ", Grant: $" << researchGrant << std::endl;
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating salary for Assistant Professor." << std::endl;
+        return getSalary() / 12.0 + researchGrant / 12.0;
+    }
+};
+
+class AssociateProfessor : public Professor {
+private:
+    int numYearsService;
+    bool hasTenure;
+    double administrativeAllowance;
+
+public:
+    AssociateProfessor(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& department, const std::string& specialization, const std::string& hireDate, double salary,
+                          int numYearsService, bool hasTenure, double administrativeAllowance)
+        : Professor(name, age, id, contactInfo, department, specialization, hireDate, salary),
+          numYearsService(numYearsService), hasTenure(hasTenure), administrativeAllowance(administrativeAllowance) {}
+    virtual ~AssociateProfessor() {}
+
+    int getNumYearsService() const { return numYearsService; }
+    bool getHasTenure() const { return hasTenure; }
+    double getAdministrativeAllowance() const { return administrativeAllowance; }
+
+    void setNumYearsService(int newNumYearsService) { numYearsService = newNumYearsService; }
+    void setHasTenure(bool newHasTenure) { hasTenure = newHasTenure; }
+    void setAdministrativeAllowance(double newAllowance) { administrativeAllowance = newAllowance; }
+
+    void displayDetails() const override {
+        Professor::displayDetails();
+        std::cout << "Years of Service: " << numYearsService << ", Tenure: " << (hasTenure ? "Yes" : "No")
+                  << ", Administrative Allowance: $" << administrativeAllowance << std::endl;
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating salary for Associate Professor." << std::endl;
+        return getSalary() / 12.0 + administrativeAllowance / 12.0;
+    }
+};
+
+class FullProfessor : public Professor {
+private:
+    std::string rank;
+    std::vector<std::string> committeeMemberships;
+    double researchFunding;
+
+public:
+    FullProfessor(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& department, const std::string& specialization, const std::string& hireDate, double salary,
+                     const std::string& rank, const std::vector<std::string>& committeeMemberships, double researchFunding)
+        : Professor(name, age, id, contactInfo, department, specialization, hireDate, salary),
+          rank(rank), committeeMemberships(committeeMemberships), researchFunding(researchFunding) {}
+    virtual ~FullProfessor() {}
+
+    std::string getRank() const { return rank; }
+    const std::vector<std::string>& getCommitteeMemberships() const { return committeeMemberships; }
+    double getResearchFunding() const { return researchFunding; }
+
+    void setRank(const std::string& newRank) { rank = newRank; }
+    void setCommitteeMemberships(const std::vector<std::string>& newCommittees) { committeeMemberships = newCommittees; }
+    void setResearchFunding(double newFunding) { researchFunding = newFunding; }
+
+    void displayDetails() const override {
+        Professor::displayDetails();
+        std::cout << "Rank: " << rank << ", Committees: ";
+        for (const auto& committee : committeeMemberships) {
+            std::cout << committee << ", ";
+        }
+        std::cout << "Funding: $" << researchFunding << std::endl;
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating salary for Full Professor." << std::endl;
+        return getSalary() / 12.0 + researchFunding / 12.0;
+    }
+};
+
+class Course {
+private:
+    std::string code;
+    std::string title;
+    int credits;
+    std::string description;
+    Professor* instructor;
+
+public:
+    Course(const std::string& code, const std::string& title, int credits, const std::string& description, Professor* instructor = nullptr)
+        : code(code), title(title), credits(credits), description(description), instructor(instructor) {}
+    ~Course() {}
+
+    std::string getCode() const { return code; }
+    std::string getTitle() const { return title; }
+    int getCredits() const { return credits; }
+    std::string getDescription() const { return description; }
+    Professor* getInstructor() const { return instructor; }
+
+    void setCode(const std::string& newCode) { code = newCode; }
+    void setTitle(const std::string& newTitle) { title = newTitle; }
+    void setCredits(int newCredits) {
+        if (newCredits > 0) credits = newCredits;
+        else std::cerr << "Error: Credits must be positive." << std::endl;
+    }
+    void setDescription(const std::string& newDescription) { description = newDescription; }
+    void setInstructor(Professor* newInstructor) { instructor = newInstructor; }
+
+    void displayDetails() const {
+        std::cout << "Course Code: " << code << ", Title: " << title << ", Credits: " << credits
+                  << ", Description: " << description;
+        if (instructor) {
+            std::cout << ", Instructor: " << instructor->getName();
+        }
+        std::cout << std::endl;
+    }
+};
+
+class Student : public Person {
+private:
+    std::string enrollmentDate;
+    std::string program;
+    double gpa;
+    std::vector<std::string> enrolledCourses;
+
+public:
+    Student(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& enrollmentDate, const std::string& program, double gpa)
+        : Person(name, age, id, contactInfo), enrollmentDate(enrollmentDate), program(program), gpa(gpa) {}
+    virtual ~Student() {}
+
+    std::string getEnrollmentDate() const { return enrollmentDate; }
+    std::string getProgram() const { return program; }
+    double getGPA() const { return gpa; }
+    const std::vector<std::string>& getEnrolledCourses() const { return enrolledCourses; }
+
+    void setEnrollmentDate(const std::string& newEnrollmentDate) { enrollmentDate = newEnrollmentDate; }
+    void setProgram(const std::string& newProgram) { program = newProgram; }
+    void setGPA(double newGPA) {
+        if (newGPA >= 0.0 && newGPA <= 4.0) {
+            gpa = newGPA;
+        } else {
+            std::cerr << "Error: GPA must be between 0.0 and 4.0." << std::endl;
+        }
+    }
+
+    void enrollInCourse(const std::string& courseCode) {
+        enrolledCourses.push_back(courseCode);
+        std::cout << getName() << " enrolled in " << courseCode << std::endl;
+    }
+
+    void displayPersonInfo() const override {
+        Person::displayPersonInfo();
+        std::cout << "Enrollment Date: " << enrollmentDate << ", Program: " << program << ", GPA: " << gpa;
+        if (!enrolledCourses.empty()) {
+            std::cout << ", Enrolled in: ";
+            for (const auto& course : enrolledCourses) {
+                std::cout << course << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    void displayDetails() const override {
+        displayPersonInfo();
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating tuition fee for Student." << std::endl;
+        if (program == "Computer Science") return 10000.0;
+        else if (program == "Engineering") return 12000.0;
+        else return 9000.0;
+    }
+};
+
+class UndergraduateStudent : public Student {
+private:
+    std::string major;
+    std::string minor;
+    std::string expectedGraduation;
+
+public:
+    UndergraduateStudent(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& enrollmentDate, const std::string& program, double gpa,
+                           const std::string& major, const std::string& minor, const std::string& expectedGraduation)
+        : Student(name, age, id, contactInfo, enrollmentDate, program, gpa),
+          major(major), minor(minor), expectedGraduation(expectedGraduation) {}
+    virtual ~UndergraduateStudent() {}
+
+    std::string getMajor() const { return major; }
+    std::string getMinor() const { return minor; }
+    std::string getExpectedGraduation() const { return expectedGraduation; }
+
+    void setMajor(const std::string& newMajor) { major = newMajor; }
+    void setMinor(const std::string& newMinor) { minor = newMinor; }
+    void setExpectedGraduation(const std::string& newGraduation) { expectedGraduation = newGraduation; }
+
+    void displayDetails() const override {
+        Student::displayDetails();
+        std::cout << "Major: " << major << ", Minor: " << minor << ", Expected Graduation: " << expectedGraduation << std::endl;
+    }
+
+    double calculatePayment() const override {
+        std::cout << "Calculating tuition fee for Undergraduate Student." << std::endl;
+        return Student::calculatePayment() * 0.9;
+    }
+};
+
+class GraduateStudent : public Student {
+private:
+    std::string researchTopic;
+    std::string advisor;
+    std::string thesisTitle;
+    Professor* advisorPtr;
+    bool isTeachingAssistant;
+    bool isResearchAssistant;
+    double taSalary;
+    double raSalary;
+
+public:
+    GraduateStudent(const std::string& name, int age, int id, const std::string& contactInfo, const std::string& enrollmentDate, const std::string& program, double gpa,
+                    const std::string& researchTopic, const std::string& advisor, const std::string& thesisTitle, Professor* advisorPtr = nullptr,
+                    bool isTeachingAssistant = false, bool isResearchAssistant = false, double taSalary = 0.0, double raSalary = 0.0)
+        : Student(name, age, id, contactInfo, enrollmentDate, program, gpa),
+          researchTopic(researchTopic), advisor(advisor), thesisTitle(thesisTitle), advisorPtr(advisorPtr),
+          isTeachingAssistant(isTeachingAssistant), isResearchAssistant(isResearchAssistant), taSalary(taSalary), raSalary(raSalary) {}
+    virtual ~GraduateStudent() {}
+
+    std::string getResearchTopic() const { return researchTopic; }
+    std::string getAdvisor() const { return advisor; }
+    std::string getThesisTitle() const { return thesisTitle; }
+    Professor* getAdvisorPtr() const { return advisorPtr; }
+    bool getIsTeachingAssistant() const { return isTeachingAssistant; }
+    bool getIsResearchAssistant() const { return isResearchAssistant; }
+    double getTASalary() const { return taSalary; }
+    double getRASalary() const { return raSalary; }
+
+    void setResearchTopic(const std::string& newResearchTopic) { researchTopic = newResearchTopic; }
+    void setAdvisor(const std::string& newAdvisor) { advisor = newAdvisor; }
+    void setThesisTitle(const std::string& newThesisTitle) { thesisTitle = newThesisTitle; }
+    void setAdvisorPtr(Professor* newAdvisorPtr) { advisorPtr = newAdvisorPtr; }
+    void setIsTeachingAssistant(bool teachingAssistant) { isTeachingAssistant = teachingAssistant; }
+    void setIsResearchAssistant(bool researchAssistant) { isResearchAssistant = researchAssistant; }
+    void setTASalary(double salary) { taSalary = salary; }
+    void setRASalary(double salary) { raSalary = salary; }
+
+    void displayDetails() const override {
+        Student::displayDetails();
+        std::cout << "Research Topic: " << researchTopic << ", Advisor: " << advisor << ", Thesis Title: " << thesisTitle;
+        if (advisorPtr) {
+            std::cout << ", Advisor's Name: " << advisorPtr->getName();
+        }
+        std::cout << (isTeachingAssistant ? ", Teaching Assistant (Salary: $" + std::to_string
