@@ -112,7 +112,7 @@ public:
 
 int main(){
     // two of each
-    Student    s1("PARUL",19,284,"8860","B.tech",3.8), s2("GOTTIYA",17,279,"9821","B.phrm",2.1);
+    Student    s1("PARUL",19,284,"8860","B.tech",3.8), s2("SAM",17,279,"9821","B.phrm",2.1);
     Professor  p1("ALICE",30,101,"9988","B.TECh","CSE","2024-25"), p2("LIZA",30,102,"9888","B.TECH","AI","2024-25");
     Course     c1("CS101","FOCP1",3), c2("CS102","FOCP2",4);
     Department d1("CSE","L1",1000), d2("CSE","L2",2000);
