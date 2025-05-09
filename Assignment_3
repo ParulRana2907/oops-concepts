@@ -91,8 +91,8 @@ public:
 // ===== Main Function =====
 int main() {
     // Creating objects
-    Student s1("PARUL", 18, 101, "7894561232", "B.Tech", 3.5);
-    Professor p1("Dr.ALICE", 30, 201, "8888888888", "Computer Science", "PROFESSOR");
+    Student s1("PARUL", 18, 101, "88607177XX", "B.Tech", 3.5);
+    Professor p1("Dr.ALICE", 30, 201, "9999999999", "Computer Science", "PROFESSOR");
 
     Course c1("CS101", "FOCP", 3, &p1);
     Department d1("CSE", &p1);
